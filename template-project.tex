@@ -134,8 +134,8 @@
 State of The Art Cardinality Estimation Algorithm } \\
 }
 \author[]{
-Nguyễn Tuấn Đạt 20130856\\% \inst{1} 
-Đặng Quang Trung 20134145% \inst{1} 
+Nguyễn Tuấn Đạt \\% \inst{1} 
+Đặng Quang Trung% \inst{1} 
 }
 
 \institute[]{
@@ -154,7 +154,10 @@ Nguyễn Tuấn Đạt 20130856\\% \inst{1}
 \begin{frame}{Nội dung}
 \tableofcontents
 \end{frame}
-\begin{frame}{Giới thiệu bài toán Cardinality estimation }
+\section{Giới thiệu}
+
+\begin{frame}{Giới thiệu bài toán Cardinality estimation}
+\subsection{Cardinality estimation}
 Là bài toán xác định số lượng phần tử khác nhau trong một data stream. 
 
 Các yêu cầu :
@@ -167,6 +170,7 @@ Các yêu cầu :
 
 \end{frame}
 \begin{frame}{Thuật toán HyperLogLog}
+\subsection{Thuật toán HyperLogLog}
 Thuật toán sử dụng yếu tố ngẫu nhiển để xấp xỉ lực lượng của một multiset.\\
 Yếu tố ngẫu nhiên được thực thi bằng cách sử dụng hàm băm H cho mọi biến của tập.\\
 Thuật toán sẽ đếm số lượng số 0 ở đâù của giá trị băm $ 0^{\varrho-1} 1 $ có ước lượng cho tập đó có thể là $ 2^\varrho$ 
@@ -192,11 +196,16 @@ Thuật toán sẽ đếm số lượng số 0 ở đâù của giá trị băm 
 \begin{frame}{Giải thích chi tiết}
 \begin{enumerate}
 \item Initialization of registers
-\item Small range correction
+\item Small range corrections
 \item Large range corrections.
 \end{enumerate}
 \end{frame}
+\section{Các cải tiến cho HyperLogLog }
+\begin{frame}{Các cải tiến cho HyperLogLog}
+
+\end{frame}
 \begin{frame}{Sử dụng hàm băm 64 bit}
+\subsection{Sử dụng hàm băm 64bit}
 \begin{itemize}
 \item[•] Hàm băm L bits có thể có $2^L$ giá trị phân biệt. Nếu lực lượng của tập n có $2^L$ biểu diễn thì xung đột hàm băm có khả năng nhiều xảy ra $\rightarrow$ ước lượng chính xác là không thể.
 \item[•] Yêu cầu bộ nhớ $\lceil log_2(L + 1 - p) \rceil .2^p$ bits
@@ -205,16 +214,18 @@ Thuật toán sẽ đếm số lượng số 0 ở đâù của giá trị băm 
 \end{itemize}
 \item[•] Sử dụng 64 bits yêu cầu bộ nhớ $6.2^p$
 \begin{itemize}
-\item không cần quan tâm xung đột hàm băm (lực lượng tập $2^64 \approx 1.8\cdot 10^{19}$ )
+\item không cần quan tâm xung đột hàm băm \\
+(lực lượng tập $2^64 \approx 1.8\cdot 10^{19}$ )
 \item Large range correction là không cần thiết 
 \end{itemize}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{Ước lượng với tập lực lượng nhỏ}
+\begin{frame}{Ước lượng cho tập lực lượng nhỏ(Estimating Small Cardinalities)}
+\subsection{Estimating Small Cardinalities}
 \begin{itemize}
-\item[•] Ước lượng $HLL_{ORIG}$ có một lỗi lớn đối với tập có lực lượng nhỏ
+\item[•] Ước lượng $HLL_{ORIG}$ gặp lỗi lớn đối với tập có lực lượng nhỏ
 \begin{itemize}
 \item[•] Nếu n = 0 thuật toán luôn trả về 0.7m 
 \end{itemize}
@@ -243,7 +254,7 @@ Thuật toán sẽ đếm số lượng số 0 ở đâù của giá trị băm 
 \begin{frame}{Hiệu chỉnh độ lệch theo kinh nghiệm}
 Để xác định đô lệch, chúng ta tính trung vị các ước lượng thô cho mỗi lực lượng trừ nó.
 \begin{figure}[h]
-%\includegraphics[scale=0.45]{img1.png}
+\includegraphics[scale=0.45]{img1.png}
 \caption{Trung bình độ lêch thô của thuật toán $HLL_{64BIT}$}
 \end{figure}
 Nếu  $n > 5m$ điều chỉnh không còn đáng kể.
@@ -267,7 +278,7 @@ Chúng ta có thể tính toán các quan sát độ lệch và sử dụng nó 
 \ei
 \end{itemize}
 \begin{figure}[h]
-%\includegraphics[scale=0.45]{img2.png}
+\includegraphics[scale=0.45]{img2.png}
 \caption{Trung bình error của 3 thuật toán}
 \end{figure}
 \end{frame}
@@ -279,16 +290,17 @@ Sử dụng bias-corrected trộn với LINEARCOUNTING có ưu điểm hơn so v
 \item Một lỗi nhỏ trong ngưỡng có kết quả nhỏ hơn về tính chính xác của kết quả thuật toán. 
 \end{itemize} 
 \end{frame}
+\subsection{Sparse Representation}
 \begin{frame}{Sparse Representation}
 $Hll_NoBias $ yêu cầu bộ nhớ là 6m bit với bất kì n  \\
 Trong trường hợp $n\ll m $ ta nhận thấy việc sử dụng bộ nhớ này hoàn toàn không hiệu quả \\
 Vì vậy trong trường hợp này ta  phải sử dụng biểu diễn thưa(Sparse Representation) trong khi lưu cắp $(idx,\varrho(w)) $ \\
 \end{frame}
 \begin{frame}{Sparse Representation}
-Chúng ta sẽ convert $(idx,\varrho(w)) $ ra một số nguyên bằng các biểu điễn thành một dãy bit trong đó idx là những bit cao và $\varrho(w) $ được lưu ở nhưng bit thấp. 
-Ta sẽ có một danh sách các $(idx,\varrho(w)) $ 
-Để tăng tốc độ ta sử dụng một tập tạm thời tập này sẽ trộn với danh sách ở một thời điểm nào đó(vd : 25 $\%$ của danh sách) .
-Một phần tử mới khi đưa vào  tập tạm thời nếu có phần tử cùng idx mà có giá trị lớn hơn nó trong tập rồi nó sẽ không được thêm vào .
+Chúng ta sẽ convert $(idx,\varrho(w)) $ ra một số nguyên bằng các biểu điễn thành một dãy bit trong đó idx là những bit cao và $\varrho(w) $ được lưu ở nhưng bit thấp. \\
+Ta sẽ có một danh sách các $(idx,\varrho(w)) $ :
+Để tăng tốc độ ta sử dụng một tập tạm thời tập này sẽ trộn với danh sách ở một thời điểm nào đó(vd : 25 $\%$ của danh sách) .\\
+Một phần tử mới khi đưa vào  tập tạm thời nếu có phần tử cùng idx mà có giá trị lớn hơn nó trong tập rồi nó sẽ không được thêm vào .\\
 Vì các tập đã được sắp xếp theo idx nên khi trộn set với list ta chỉ cần lướt một lần.
 
 \end{frame}
@@ -301,8 +313,9 @@ Vì các tập đã được sắp xếp theo idx nên khi trộn set với list
 \begin{frame}{Higher Precision for the Sparse Representa-
 tion} 
 
-Trong biểu diễn thưa ta có thể chon p' >p (Precision) nó giúp ta tăng độ  độ chính xác của thuật toán lên.
-Điều gì xảy ra nếu khi tăng độ chính xác làm không gian lưu trữ vượt quá lên ngưỡng 6m bit.
+Trong biểu diễn thưa ta có thể chon p' >p (Precision) nó giúp ta tăng độ  độ chính xác của thuật toán lên.\\
+
+Điều gì xảy ra nếu khi tăng độ chính xác làm không gian lưu trữ vượt quá lên ngưỡng 6m bit.\\
 Ta có thể một biểu diễn thưa với p' -> biểu điễn p bới thuật toán sau:
 
 \end{frame}
@@ -314,7 +327,7 @@ Xét một cặp $(idx',\varrho(w)') $ với p' ta cần chuyển về $(idx,\va
 \end{figure}
 
 \end{frame}
-\begin{frame}{Giảm không gian nhớ với nén biểu diễn thưa }
+\begin{frame}{Giảm không gian nhớ với nén thưa }
 Sử dụng biểu diễn nguyên cho $(idx,\varrho(w)) $ hoạt đông tốt nhưng một phần bit của bộ nhớ vẫn bị bỏ lãng phí.
 Tuy nhiên ta có thể lưu ý 2 điều sau để dữ liệu lưu được đặc khít hơn :
 \begin{itemize}
@@ -334,15 +347,15 @@ Khi nhìn vào việc thêm một phần tử vào danh sách nén ta sẽ thấ
 \begin{frame}{Encoding Hash Values}
 Nhận thấy số lượng biến băm có thể lưu bằng biểu diễn thưa là nhỏ khi so ngưỡng chuyển từ Linear couting to bias-corrected raw
 estimate . \\
-Linear couting  chỉ yêu cầu m và số lượng các idex tai đấy có giá trị nhớ bằng 0.
+Linear couting  chỉ yêu cầu m và số lượng các idex tai đấy có giá trị nhớ bằng 0.\\
 Với các giá trị chuyển từ biểu diễn thưa lên biểu diễn thường $\varrho(w)$ chỉ cần lưu lại khi các bit $<x_{63-p} ,...,x_{64-p}>$ tất cả là 0. Một hàm băm tốt thì xác suất lưu lại  $\varrho(w)$ $ 2^{p-p'}$
-Thực hiện : sử dụng 1 bit đẻ cho biết ta có lưu lại $\varrho(w)$ không 
+\\Thực hiện : sử dụng 1 bit đẻ cho biết ta có lưu lại $\varrho(w)$ không 
 if $<x_{63-p} ,...,x_{64-p}>$ tất cả là 0 encode :  $<x_{63-p} ,...,x_{64-p}> || <\varrho(w)>||<1>$
 else $<x_{63-p} ,...,x_{64-p}> ||<0>$ 
 \end{frame}
 \begin{frame}{Hiệu quả không gian}
 \begin{figure}[H]
-%\includegraphics[scale=0.5]{img3.png}
+\includegraphics[scale=0.5]{img3.png}
 \end{figure}
 \begin{itemize}
 \item $p = 14$ lưu mỗi phần tử trong biểu diễn thưa như 1 số nguyên sẽ cần 32 bit
