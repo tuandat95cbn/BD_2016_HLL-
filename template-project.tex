@@ -195,7 +195,19 @@ Thuật toán sẽ đếm số lượng số 0 ở đâù của giá trị băm 
 \item Small range correction
 \item Large range corrections.
 \end{enumerate}
-
+\end{frame}
+\begin{frame}{Sử dụng hàm băm 64 bit}
+\begin{itemize}
+\item[•] Hàm băm L bits có thể có $2^L$ giá trị phân biệt. Nếu lực lượng của tập n có $2^L$ biểu diễn thì xung đột hàm băm có khả năng nhiều xảy ra $\rightarrow$ ước lượng chính xác là không thể.
+\item[•] Yêu cầu bộ nhớ $\lceil log_2(L + 1 - p) \rceil .2^p$ bits
+\begin{itemize}
+\item L bits hàm băm, độ chính xác p.
+\end{itemize}
+\item[•] Sử dụng 64 bits yêu cầu bộ nhớ $6.2^p$
+\begin{itemize}
+\item Loại bỏ được xung đột hàm băm (cardinality approaches $2^64 \approx 1.8\cdot 10^{19}$ )
+\end{itemize}
+\end{itemize}
 \end{frame}
 \section*{Tài liệu tham khảo}
 
