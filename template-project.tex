@@ -170,7 +170,6 @@ Các yêu cầu :
 Thuật toán sử dụng yếu tố ngẫu nhiển để xấp xỉ lực lượng của một multiset.\\
 Yếu tố ngẫu nhiên được thực thi bằng cách sử dụng hàm băm H cho mọi biến của tập.\\
 Thuật toán sẽ đếm số lượng số 0 ở đâù của giá trị băm $ 0^{\varrho-1} 1 $ có ước lượng cho tập đó có thể là $ 2^\varrho$ 
-
 \end{frame}
 \begin{frame}
 \begin{figure}[h]
@@ -189,7 +188,8 @@ Thuật toán sẽ đếm số lượng số 0 ở đâù của giá trị băm 
 \includegraphics[scale=0.3]{HLL2.png}
 \end{figure}
 \end{frame}
-\begin{frame}{Giải thích chi tiết }
+
+\begin{frame}{Giải thích chi tiết}
 \begin{enumerate}
 \item Initialization of registers
 \item Small range correction
@@ -209,6 +209,75 @@ Thuật toán sẽ đếm số lượng số 0 ở đâù của giá trị băm 
 \item Large range correction là không cần thiết 
 \end{itemize}
 \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Ước lượng với tập lực lượng nhỏ}
+\begin{itemize}
+\item[•] Ước lượng $HLL_{ORIG}$ có một lỗi lớn đối với tập có lực lượng nhỏ
+\begin{itemize}
+\item[•] Nếu n = 0 thuật toán luôn trả về 0.7m 
+\end{itemize}
+\item[•] Để đạt được ước lượng tốt cho tập lực lượng nhỏ
+\begin{itemize}
+\item $HLL_{ORIG}$ sử dụng LINEARCOUNTING nếu $E < \frac{5}{2}m$ ngược lại dùng ước lượng thô. 
+\end{itemize}
+\item[•] Các lỗi của ước lượng thô là vì độ lệch
+\begin{itemize}
+\item Chúng ta có thể hiệu chỉnh độ lệch
+\item Chúng ta hi vọng sẽ đạt được ước lượng tốt nhất đối với tập lực lượng nhỏ trong thực tế.
+\end{itemize}
+\end{itemize}
+\end{frame}
+\begin{frame}{Cài đặt thực nghiệm}
+\bi
+\item Chay thuật toán $HLL_{64BIT}$ không sử dụng LINEARCOUNTING và đo ước lượng cho 1 khoảng với các lực lượng khác nhau.
+\bi
+\item Ước lượng với $p = 14$ trên tập 5000 tập dữ liệu tạo ngẫu nhiên cho mỗi lực lượng.
+\item Sử dụng cùng 1 hàm băm 64 bit cho tất cả thực nghiệm.
+\item Kiểm tra với nhiều hàm băm khác nhau (MD5, SHA256,MURMUR3).
+\ei
+\item Tuy nhiện chưa tìm dấu hiệu để hàm băm này thực hiện tốt hơn các hàm băm khác.
+\ei
+\end{frame}
+\begin{frame}{Hiệu chỉnh độ lệch theo kinh nghiệm}
+Để xác định đô lệch, chúng ta tính trung vị các ước lượng thô cho mỗi lực lượng trừ nó.
+\begin{figure}[h]
+%\includegraphics[scale=0.45]{img1.png}
+\caption{Trung bình độ lêch thô của thuật toán $HLL_{64BIT}$}
+\end{figure}
+Nếu  $n > 5m$ điều chỉnh không còn đáng kể.
+\end{frame}
+
+\begin{frame}{Hiệu chỉnh độ lêch theo kinh nghiệm}
+Chúng ta có thể tính toán các quan sát độ lệch và sử dụng nó để hiệu chỉnh ước lượng thô \\ 
+
+Để làm trong thực tế:
+\bi
+\item Chọn 200 lực lượng bằng nội suy điểm
+\item Ghi lại trung bình ước lượng thô và độ lệch(sai số).
+\item Dùng k-nearest neighbor nội suy để lấy độ lệch cho một cái ước lược thô.(k = 6).
+\ei
+\end{frame}
+\begin{frame}{Sử dụng thuật toán}
+\begin{itemize}
+\item Chạy thực nghiệm 3 thuật toán với các lực lượng khác nhau và so sánh phân bố error.
+\bi
+\item LINEARCOUNTING, bias-corrrected raw estimate, raw estimate.
+\ei
+\end{itemize}
+\begin{figure}[h]
+%\includegraphics[scale=0.45]{img2.png}
+\caption{Trung bình error của 3 thuật toán}
+\end{figure}
+\end{frame}
+\begin{frame}{Ưu điểm của hiệu chỉnh độ lệch}
+Sử dụng bias-corrected trộn với LINEARCOUNTING có ưu điểm hơn so với raw estimate trộn với LINEARCOUNTING.
+\begin{itemize}
+\item Lỗi cho 1 khoảng quan trọng của các lực lượng nhỏ hơn lỗi của $HLL_{64BIT}$
+\item Kết quả của thuật toán không có độ lệch đáng kể.
+\item Một lỗi nhỏ trong ngưỡng có kết quả nhỏ hơn về tính chính xác của kết quả thuật toán. 
+\end{itemize} 
 \end{frame}
 \begin{frame}{Sparse Representation}
 $Hll_NoBias $ yêu cầu bộ nhớ là 6m bit với bất kì n  \\
@@ -271,6 +340,19 @@ Thực hiện : sử dụng 1 bit đẻ cho biết ta có lưu lại $\varrho(w)
 if $<x_{63-p} ,...,x_{64-p}>$ tất cả là 0 encode :  $<x_{63-p} ,...,x_{64-p}> || <\varrho(w)>||<1>$
 else $<x_{63-p} ,...,x_{64-p}> ||<0>$ 
 \end{frame}
+\begin{frame}{Hiệu quả không gian}
+\begin{figure}[H]
+%\includegraphics[scale=0.5]{img3.png}
+\end{figure}
+\begin{itemize}
+\item $p = 14$ lưu mỗi phần tử trong biểu diễn thưa như 1 số nguyên sẽ cần 32 bit
+\item Mã hóa thì điều này giảm 
+\begin{itemize}
+\item Độ dài trung bình 19.49 bits/phần tử
+\end{itemize}
+\end{itemize}
+\end{frame}
+
 \section*{Tài liệu tham khảo}
 
 % TODO: Book
