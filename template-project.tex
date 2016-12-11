@@ -154,7 +154,49 @@ Nguyễn Tuấn Đạt 20130856\\% \inst{1}
 \begin{frame}{Nội dung}
 \tableofcontents
 \end{frame}
+\begin{frame}{Giới thiệu bài toán Cardinality estimation }
+Là bài toán xác định số lượng phần tử khác nhau trong một data stream. 
 
+Các yêu cầu :
+\begin{itemize}
+\item Accuracy(Độ chính xác)
+\item Memory efficiency( Hiệu quả sử dụng bộ nhớ)
+\item Estimate large cardinalities(Ước lượng một tập rộng)
+\item Practicality.(Tính thực tế)
+\end{itemize}
+
+\end{frame}
+\begin{frame}{Thuật toán HyperLogLog}
+Thuật toán sử dụng yếu tố ngẫu nhiển để xấp xỉ lực lượng của một multiset.\\
+Yếu tố ngẫu nhiên được thực thi bằng cách sử dụng hàm băm H cho mọi biến của tập.\\
+Thuật toán sẽ đếm số lượng số 0 ở đâù của giá trị băm $ 0^{\varrho-1} 1 $ có ước lượng cho tập đó có thể là $ 2^\varrho$ 
+
+\end{frame}
+\begin{frame}
+\begin{figure}[h]
+\includegraphics[scale=0.2]{HLL.png}
+\caption Thuật toán Hyper Log Log
+\end{figure}
+\end{frame}
+\begin{frame}
+\begin{figure}[H]
+\includegraphics[scale=0.3]{HLL1.png}
+
+\end{figure}
+\end{frame}
+\begin{frame}
+\begin{figure}[H]
+\includegraphics[scale=0.3]{HLL2.png}
+\end{figure}
+\end{frame}
+\begin{frame}{Giải thích chi tiết }
+\begin{enumerate}
+\item Initialization of registers
+\item Small range correction
+\item Large range corrections.
+\end{enumerate}
+
+\end{frame}
 \section*{Tài liệu tham khảo}
 
 % TODO: Book
