@@ -130,16 +130,17 @@
 %\setbeamertemplate{footline}{}
 
 % Tác giả, Tiêu đề, vân vân
-\title[]{{\huge \bf Chương 3.\\ Cấu trúc dữ liệu nâng cao} \\
-\large Lập trình thi đấu}
-\author[Đỗ Phan Thuận]{
-Đỗ Phan Thuận% \inst{1} 
+\title[]{{\bf \large HyperLogLog in Practice: Algorithmic Engineering of a
+State of The Art Cardinality Estimation Algorithm } \\
+}
+\author[]{
+Nguyễn Tuấn Đạt 20130856\\% \inst{1} 
+Đặng Quang Trung 20134145% \inst{1} 
 }
 
 \institute[]{
 %\inst{1}% 
-Bộ môn Khoa Học Máy Tính, Viện CNTT \& TT, \\
-Trường Đại Học Bách Khoa Hà Nội.
+
 }
 
 \logo{\includegraphics[scale=0.05]{hust.jpg} \vspace{220pt}}
@@ -154,17 +155,6 @@ Trường Đại Học Bách Khoa Hà Nội.
 \tableofcontents
 \end{frame}
 
-\section{Lý thuyết-15'}
-\subsection{Tổng quan-2'}
-\subsection{Các kỹ thuật-10'}
-\subsection{Các ứng dụng-3'}
-\section{Bài tập thực hành-10'/bài}
-\subsection{Giới thiệu và Mô tả bài toán-1'}
-\subsection{Thuật toán giải-4'}
-\subsection{Chứng minh tính đúng đắn và Độ phức tạp-2'}
-\subsection{Mô tả cài đặt-1'}
-\subsection{Mô tả bộ dữ liệu thử nghiệm-1'}
-\subsection{Demo chương trình/kết quả: chụp ảnh kết quả chạy chương trình chấm Themis-1'}
 \section*{Tài liệu tham khảo}
 
 % TODO: Book
@@ -181,129 +171,10 @@ Trường Đại Học Bách Khoa Hà Nội.
 
 % TODO: Overview
 \begin{frame}{Các bài giảng}
-    \bi
-        \item Dự kiến các chủ đề
-    \ei
-
-    {
-        \tiny
-
-        \begin{center}
-            \begin{tabular}{cl|ll}
-                Thứ tự. & Thời gian & Chủ đề & Hoạt động \\
-                \hline
-                1 & 2005 & Giới thiệu & \\
-                2 & 2005 & Cấu trúc dữ liệu và thư viện & \\
-                3 & 2005 & Cấu trúc dữ liệu nâng cao & \\
-                4 & 2005 & Sơ đồ giải bài toán & \\
-                5 & 2005 &\pbox{20cm}{\vspace{2pt}Tham lam \\Quy hoạch động} & Bài tập thực hành I \\
-                  & 2005 & & \\
-                6 & 2005 & Quy hoạch động & \\
-                7 & 2005 & Đồ thị vô hướng & \\
-                8 & 2005 & Đồ thị & \\
-                9 & 2005 & Luồng trong mạng & \\
-                10 & 2005 & Toán học & Bài tập thực hành II \\
-                   & 2005 & & \\
-                11 & 2005 & Xâu & \\
-                12 & 2005 & Hình học & \\
-                13 & 2005 & & Kiểm tra \\
-            \end{tabular}
-        \end{center}
-    }
-    
+ 
 \end{frame}
 
 % TODO: What kind of problems we're dealing with: description/input/output
-\begin{frame}{Mẫu đề bài}
-    \bi
-        \item Mẫu chuẩn trong hầu hết các kỳ thi bao gồm
-        
-            \bi
-                \item Mô tả bài toán
-                \item Mô tả định dạng dữ liệu vào
-                \item Mô tả định dạng kết quả ra
-                \item Ví dụ Dữ liệu vào/Kết quả ra
-                \item Giới hạn thời gian theo giây
-                \item Giới hạn bộ nhớ theo bytes/megabytes
-            \ei
-        \item Yêu cầu viết chương trình giải bài toán đúng càng nhiều bộ dữ liệu càng tốt. Mặc định là dữ liệu vào không cần kiểm tra tính đúng đắn
-        \item Chương trình không được chạy quá giới hạn thời gian và giới hạn bộ nhớ
-    \ei
-\end{frame}
-
-% TODO: Example problems/solutions
-\begin{frame}{Bài toán ví dụ}
-    \vspace{10pt}
-    {\footnotesize\color{title}Mô tả bài toán}\\
-    Viết chương trình nhân hai số nguyên.
-
-    \vspace{10pt}
-
-    {\footnotesize\color{title}Mô tả dữ liệu vào}\\
-    Dòng đầu tiên chứa một số nguyên $T$, với $1\leq T \leq
-    100$, là số lượng bộ test. $T$ dòng tiếp theo, mỗi dòng chứa một test. Mỗi test bao gồm 2 số nguyên $A,B$,
-    với $-2^{20} \leq A,B \leq 2^{20}$, cách nhau ít nhất một dấu cách.
-
-    \vspace{10pt}
-
-    {\footnotesize\color{title}Mô tả kết quả ra}\\
-    Kết quả ghi ra mỗi dòng tương ứng với một test chứa một số là giá trị $A\times B$.
-\end{frame}
-
-\begin{frame}{Bài toán ví dụ}
-    \vspace{10pt}
-
-    \begin{center}
-        \begin{tabular}{|l|l|}
-            \hline
-            {\footnotesize Ví dụ dữ liệu vào} & {\footnotesize Dữ liệu kết quả ra} \\
-            \hline
-            \begin{minipage}{80pt}
-\vspace{10pt}
-\ttfamily
-4\\
-3 4\\
-13 0\\
-1 8\\
-100 100\\
-            \end{minipage}
-&
-\begin{minipage}{80pt}
-\vspace{10pt}
-\ttfamily
-12\\
-0\\
-8\\
-10000\\
-\end{minipage}
-\\
-            \hline
-        \end{tabular}
-    \end{center}
-
-\end{frame}
-
-\begin{frame}[fragile]{Lời giải ví dụ}
-\begin{lstlisting}{frame=single}
-#include <iostream>
-using namespace std;
-int main() {
-    int T;
-    cin >> T;
-    for (int t = 0; t < T; t++) {
-        int A, B;
-        cin >> A >> B;
-        cout << A * B << endl;
-    }
-    return 0;
-}
-\end{lstlisting}
-
-    \bi
-        \onslide<2->{\item Lời giải này có đúng không? \onslide<5->{{\color{vhilight}KHÔNG!}}}
-        \onslide<3->{\item Điều gì xảy ra nếu $A = B = 2^{20}$? \onslide<4->{Kết quả ra $0$...}}
-    \ei
-\end{frame}
 
 
 
