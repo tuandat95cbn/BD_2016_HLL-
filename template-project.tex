@@ -210,6 +210,67 @@ Thuật toán sẽ đếm số lượng số 0 ở đâù của giá trị băm 
 \end{itemize}
 \end{itemize}
 \end{frame}
+\begin{frame}{Sparse Representation}
+$Hll_NoBias $ yêu cầu bộ nhớ là 6m bit với bất kì n  \\
+Trong trường hợp $n\ll m $ ta nhận thấy việc sử dụng bộ nhớ này hoàn toàn không hiệu quả \\
+Vì vậy trong trường hợp này ta  phải sử dụng biểu diễn thưa(Sparse Representation) trong khi lưu cắp $(idx,\varrho(w)) $ \\
+\end{frame}
+\begin{frame}{Sparse Representation}
+Chúng ta sẽ convert $(idx,\varrho(w)) $ ra một số nguyên bằng các biểu điễn thành một dãy bit trong đó idx là những bit cao và $\varrho(w) $ được lưu ở nhưng bit thấp. 
+Ta sẽ có một danh sách các $(idx,\varrho(w)) $ 
+Để tăng tốc độ ta sử dụng một tập tạm thời tập này sẽ trộn với danh sách ở một thời điểm nào đó(vd : 25 $\%$ của danh sách) .
+Một phần tử mới khi đưa vào  tập tạm thời nếu có phần tử cùng idx mà có giá trị lớn hơn nó trong tập rồi nó sẽ không được thêm vào .
+Vì các tập đã được sắp xếp theo idx nên khi trộn set với list ta chỉ cần lướt một lần.
+
+\end{frame}
+\begin{frame}{Lợi ích }
+\begin{itemize}
+\item Giảm không gian nhớ
+\item Tăng một chút thời gian chạy với việc sử dụng tập tạm thời
+\end{itemize}
+\end{frame}
+\begin{frame}{Higher Precision for the Sparse Representa-
+tion} 
+
+Trong biểu diễn thưa ta có thể chon p' >p (Precision) nó giúp ta tăng độ  độ chính xác của thuật toán lên.
+Điều gì xảy ra nếu khi tăng độ chính xác làm không gian lưu trữ vượt quá lên ngưỡng 6m bit.
+Ta có thể một biểu diễn thưa với p' -> biểu điễn p bới thuật toán sau:
+
+\end{frame}
+\begin{frame}{Thuật toán chuyển độ chính xác}
+Xét một cặp $(idx',\varrho(w)') $ với p' ta cần chuyển về $(idx,\varrho(w)) $ với p : 
+\begin{figure}[H]
+\includegraphics[scale=0.2]{HSR.png}
+\caption Thuật toán chuyển Precision
+\end{figure}
+
+\end{frame}
+\begin{frame}{Giảm không gian nhớ với nén biểu diễn thưa }
+Sử dụng biểu diễn nguyên cho $(idx,\varrho(w)) $ hoạt đông tốt nhưng một phần bit của bộ nhớ vẫn bị bỏ lãng phí.
+Tuy nhiên ta có thể lưu ý 2 điều sau để dữ liệu lưu được đặc khít hơn :
+\begin{itemize}
+\item Sử dụng số nguyên với độ rộng cứng có thể gây lãng phí.
+\item Danh sách được sắp xếp ta có thể lợi dụng điều này.
+\end{itemize}
+\end{frame}
+\begin{frame}{Thực hiện}
+\begin{itemize}
+\item Chúng ta sẽ encode the độ dài của biến
+\item Ngoài ra chúng ta không lưu $a_1,a_2,a_3,...$ mà lưu $ a_1,a_2-a_1,a_3-a_2,...$
+\end{itemize}
+\end{frame}
+\begin{frame}{Nhược điểm }
+Khi nhìn vào việc thêm một phần tử vào danh sách nén ta sẽ thấy việc này khá là khó khăn nhưng xét trong một tiến trình trộn giữa tập tạm thời và danh sách nén thì việc này vẫn được thực hiện một cánh tuần tự.
+\end{frame}
+\begin{frame}{Encoding Hash Values}
+Nhận thấy số lượng biến băm có thể lưu bằng biểu diễn thưa là nhỏ khi so ngưỡng chuyển từ Linear couting to bias-corrected raw
+estimate . \\
+Linear couting  chỉ yêu cầu m và số lượng các idex tai đấy có giá trị nhớ bằng 0.
+Với các giá trị chuyển từ biểu diễn thưa lên biểu diễn thường $\varrho(w)$ chỉ cần lưu lại khi các bit $<x_{63-p} ,...,x_{64-p}>$ tất cả là 0. Một hàm băm tốt thì xác suất lưu lại  $\varrho(w)$ $ 2^{p-p'}$
+Thực hiện : sử dụng 1 bit đẻ cho biết ta có lưu lại $\varrho(w)$ không 
+if $<x_{63-p} ,...,x_{64-p}>$ tất cả là 0 encode :  $<x_{63-p} ,...,x_{64-p}> || <\varrho(w)>||<1>$
+else $<x_{63-p} ,...,x_{64-p}> ||<0>$ 
+\end{frame}
 \section*{Tài liệu tham khảo}
 
 % TODO: Book
@@ -228,7 +289,6 @@ Thuật toán sẽ đếm số lượng số 0 ở đâù của giá trị băm 
 \begin{frame}{Các bài giảng}
  
 \end{frame}
-
 % TODO: What kind of problems we're dealing with: description/input/output
 
 
