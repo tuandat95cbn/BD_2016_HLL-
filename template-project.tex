@@ -292,17 +292,20 @@ Sử dụng bias-corrected trộn với LINEARCOUNTING có ưu điểm hơn so v
 \end{frame}
 \subsection{Sparse Representation}
 \begin{frame}{Sparse Representation}
-$Hll_NoBias $ yêu cầu bộ nhớ là 6m bit với bất kì n  \\
-Trong trường hợp $n\ll m $ ta nhận thấy việc sử dụng bộ nhớ này hoàn toàn không hiệu quả \\
-Vì vậy trong trường hợp này ta  phải sử dụng biểu diễn thưa(Sparse Representation) trong khi lưu cắp $(idx,\varrho(w)) $ \\
+\bi
+\item $Hll_NoBias $ yêu cầu bộ nhớ là 6m bit với bất kì n  \\
+\item Trong trường hợp $n\ll m $ ta nhận thấy việc sử dụng bộ nhớ này hoàn toàn không hiệu quả \\
+-> Vì vậy trong trường hợp này ta  phải sử dụng biểu diễn thưa(Sparse Representation) trong khi lưu cắp $(idx,\varrho(w)) $ \\
+\ei
 \end{frame}
 \begin{frame}{Sparse Representation}
-Chúng ta sẽ convert $(idx,\varrho(w)) $ ra một số nguyên bằng các biểu điễn thành một dãy bit trong đó idx là những bit cao và $\varrho(w) $ được lưu ở nhưng bit thấp. \\
-Ta sẽ có một danh sách các $(idx,\varrho(w)) $ :
+\bi
+\item Chúng ta sẽ convert $(idx,\varrho(w)) $ ra một số nguyên bằng các biểu điễn thành một dãy bit trong đó idx là những bit cao và $\varrho(w) $ được lưu ở nhưng bit thấp. \\
+\item Ta sẽ có một danh sách các $(idx,\varrho(w)) $ :
 Để tăng tốc độ ta sử dụng một tập tạm thời tập này sẽ trộn với danh sách ở một thời điểm nào đó(vd : 25 $\%$ của danh sách) .\\
-Một phần tử mới khi đưa vào  tập tạm thời nếu có phần tử cùng idx mà có giá trị lớn hơn nó trong tập rồi nó sẽ không được thêm vào .\\
+\item Một phần tử mới khi đưa vào  tập tạm thời nếu có phần tử cùng idx mà có giá trị lớn hơn nó trong tập rồi nó sẽ không được thêm vào .\\
 Vì các tập đã được sắp xếp theo idx nên khi trộn set với list ta chỉ cần lướt một lần.
-
+\ei
 \end{frame}
 \begin{frame}{Lợi ích }
 \begin{itemize}
@@ -312,28 +315,36 @@ Vì các tập đã được sắp xếp theo idx nên khi trộn set với list
 \end{frame}
 \begin{frame}{Higher Precision for the Sparse Representa-
 tion} 
+\bi
+\item Trong biểu diễn thưa ta có thể chon p' >p (Precision) nó giúp ta tăng độ  độ chính xác của thuật toán lên.\\
 
-Trong biểu diễn thưa ta có thể chon p' >p (Precision) nó giúp ta tăng độ  độ chính xác của thuật toán lên.\\
-
-Điều gì xảy ra nếu khi tăng độ chính xác làm không gian lưu trữ vượt quá lên ngưỡng 6m bit.\\
-Ta có thể một biểu diễn thưa với p' -> biểu điễn p bới thuật toán sau:
-
+\item Điều gì xảy ra nếu khi tăng độ chính xác làm không gian lưu trữ vượt quá lên ngưỡng 6m bit.\\
+\item Ta có thể một biểu diễn thưa với p' -> biểu điễn p bới thuật toán sau:
+\ei 
 \end{frame}
 \begin{frame}{Thuật toán chuyển độ chính xác}
 Xét một cặp $(idx',\varrho(w)') $ với p' ta cần chuyển về $(idx,\varrho(w)) $ với p : 
 \begin{figure}[H]
 \includegraphics[scale=0.2]{HSR.png}
-\caption Thuật toán chuyển Precision
+\caption {Thuật toán chuyển Precision}
 \end{figure}
 
 \end{frame}
+\begin{frame}
+\begin{figure}
+\includegraphics[scale=0.5]{img4.png}
+\caption{So sánh Hll NoBias và  Hll++}
+\end{figure}
+\end{frame}
 \begin{frame}{Giảm không gian nhớ với nén thưa }
-Sử dụng biểu diễn nguyên cho $(idx,\varrho(w)) $ hoạt đông tốt nhưng một phần bit của bộ nhớ vẫn bị bỏ lãng phí.
-Tuy nhiên ta có thể lưu ý 2 điều sau để dữ liệu lưu được đặc khít hơn :
+\bi
+\item Sử dụng biểu diễn nguyên cho $(idx,\varrho(w)) $ hoạt đông tốt nhưng một phần bit của bộ nhớ vẫn bị bỏ lãng phí.
+\item Tuy nhiên ta có thể lưu ý 2 điều sau để dữ liệu lưu được đặc khít hơn :
 \begin{itemize}
 \item Sử dụng số nguyên với độ rộng cứng có thể gây lãng phí.
 \item Danh sách được sắp xếp ta có thể lợi dụng điều này.
 \end{itemize}
+\ei 
 \end{frame}
 \begin{frame}{Thực hiện}
 \begin{itemize}
@@ -345,13 +356,16 @@ Tuy nhiên ta có thể lưu ý 2 điều sau để dữ liệu lưu được đ
 Khi nhìn vào việc thêm một phần tử vào danh sách nén ta sẽ thấy việc này khá là khó khăn nhưng xét trong một tiến trình trộn giữa tập tạm thời và danh sách nén thì việc này vẫn được thực hiện một cánh tuần tự.
 \end{frame}
 \begin{frame}{Encoding Hash Values}
-Nhận thấy số lượng biến băm có thể lưu bằng biểu diễn thưa là nhỏ khi so ngưỡng chuyển từ Linear couting to bias-corrected raw
+\bi 
+\item Nhận thấy số lượng biến băm có thể lưu bằng biểu diễn thưa là nhỏ khi so ngưỡng chuyển từ Linear couting to bias-corrected raw
 estimate . \\
-Linear couting  chỉ yêu cầu m và số lượng các idex tai đấy có giá trị nhớ bằng 0.\\
-Với các giá trị chuyển từ biểu diễn thưa lên biểu diễn thường $\varrho(w)$ chỉ cần lưu lại khi các bit $<x_{63-p} ,...,x_{64-p}>$ tất cả là 0. Một hàm băm tốt thì xác suất lưu lại  $\varrho(w)$ $ 2^{p-p'}$
-\\Thực hiện : sử dụng 1 bit đẻ cho biết ta có lưu lại $\varrho(w)$ không 
-if $<x_{63-p} ,...,x_{64-p}>$ tất cả là 0 encode :  $<x_{63-p} ,...,x_{64-p}> || <\varrho(w)>||<1>$
-else $<x_{63-p} ,...,x_{64-p}> ||<0>$ 
+\item Linear couting  chỉ yêu cầu m và số lượng các idex tai đấy có giá trị nhớ bằng 0.\\
+\item Với các giá trị chuyển từ biểu diễn thưa lên biểu diễn thường $\varrho(w)$ chỉ cần lưu lại khi các bit $<x_{63-p} ,...,x_{64-p}>$ tất cả là 0. Một hàm băm tốt thì xác suất lưu lại  $\varrho(w)$ $ 2^{p-p'}$
+\\Thực hiện : sử dụng 1 bit đẻ cho biết ta có lưu lại $\varrho(w)$ không:\\
+ 
+if $<x_{63-p} ,...,x_{64-p}>$ tất cả là 0 encode :  $$<x_{63-p} ,...,x_{64-p}> || <\varrho(w)>||<1>$$
+else $$<x_{63-p} ,...,x_{64-p}> ||<0>$$ 
+\ei
 \end{frame}
 \begin{frame}{Hiệu quả không gian}
 \begin{figure}[H]
@@ -366,6 +380,25 @@ else $<x_{63-p} ,...,x_{64-p}> ||<0>$
 \end{itemize}
 \end{frame}
 
+\begin{frame}{Mã giả kết hợp các cải tiến}
+\begin{figure}[h]
+\includegraphics[scale=0.6]{img5.png}
+\caption{Phase 0}
+\end{figure}
+\end{frame}
+\begin{frame}{}
+\begin{figure}[h]
+\includegraphics[scale=0.6]{img6.png}
+\caption{Phase 1}
+\end{figure}
+\end{frame}
+\begin{frame}
+\begin{figure}[h]
+\includegraphics[scale=0.6]{img7.png}
+\caption{Phase 2}
+\end{figure}
+
+\end{frame}
 \begin{frame}{Kết luận}
 \begin{itemize}
 \item $<12000$ biểu diễn thưa làm giảm lỗi
@@ -377,10 +410,9 @@ else $<x_{63-p} ,...,x_{64-p}> ||<0>$
 \end{frame}
 \begin{frame}{Kết luận }
 \begin{figure}[H]
-\includegraphics[scale=0.3]{KL.png}
-\caption so sánh HLL và HLL++
+\includegraphics[scale=0.2]{KL.png}
+\caption{ So sánh HLL và HLL++}
 \end{figure}
-
 \end{frame}
 \section*{Tài liệu tham khảo}
 
