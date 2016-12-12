@@ -366,25 +366,37 @@ else $<x_{63-p} ,...,x_{64-p}> ||<0>$
 \end{itemize}
 \end{frame}
 
+\begin{frame}{Kết luận}
+\begin{itemize}
+\item $<12000$ biểu diễn thưa làm giảm lỗi
+\item $12000->61000$ the bias correction làm giảm lỗi
+\item HLL++ tốn ít bộ nhớ hơn
+\item sử dụng hàm băm 64 bit cho phép ước lượng lên khoảng 1 tỉ
+\end{itemize}
+
+\end{frame}
+\begin{frame}{Kết luận }
+\begin{figure}[H]
+\includegraphics[scale=0.3]{KL.png}
+\caption so sánh HLL và HLL++
+\end{figure}
+
+\end{frame}
 \section*{Tài liệu tham khảo}
 
 % TODO: Book
-\begin{frame}{Sách tham khảo}
+\begin{frame}{Tài liệu tham khảo}
     \vspace{20pt}
 
     \bi
-        \item {\color{hilight}Competitive Programming} by Steven Halim
-        \item[] (Sử dụng bản 2 hoặc bản 3)
-        \vspace{10pt}
-        \item {\color{hilight}Bài giảng Chuyên đề} by Lê Minh Hoàng
+        \item HyperLogLog in Practice: Algorithmic Engineering of a
+State of The Art Cardinality Estimation Algorithm by Stefan Heule Marc Nunkesser Alexander Hall
+        \item Understanding the HyperLogLog: a
+Near-Optimal Cardinality Estimation Algorithm
+Philippe Flajolet, Èric Fusy, Olivier Gandouet and Frédéric Meunier
     \ei
 \end{frame}
 
-% TODO: Overview
-\begin{frame}{Các bài giảng}
- 
-\end{frame}
-% TODO: What kind of problems we're dealing with: description/input/output
 
 
 
