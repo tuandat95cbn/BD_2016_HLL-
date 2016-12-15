@@ -162,18 +162,50 @@ Là bài toán xác định số lượng phần tử khác nhau trong một dat
 
 Các yêu cầu :
 \begin{itemize}
-\item Accuracy(Độ chính xác)
-\item Memory efficiency( Hiệu quả sử dụng bộ nhớ)
-\item Estimate large cardinalities(Ước lượng một tập rộng)
-\item Practicality.(Tính thực tế)
+\item Accuracy ( Độ chính xác )
+\item Memory efficiency ( Hiệu quả sử dụng bộ nhớ )
+\item Estimate large cardinalities ( Ước lượng một tập rộng )
+\item Practicality ( Tính thực tế )
 \end{itemize}
 
 \end{frame}
-\begin{frame}{Thuật toán HyperLogLog}
-\subsection{Thuật toán HyperLogLog}
-Thuật toán sử dụng yếu tố ngẫu nhiển để xấp xỉ lực lượng của một multiset.\\
-Yếu tố ngẫu nhiên được thực thi bằng cách sử dụng hàm băm H cho mọi biến của tập.\\
-Thuật toán sẽ đếm số lượng số 0 ở đâù của giá trị băm $ 0^{\varrho-1} 1 $ có ước lượng cho tập đó có thể là $ 2^\varrho$ 
+\begin{frame}{Ý tưởng thuật toán HyperLogLog}
+\subsection{Ý tưởng thuật toán HyperLogLog}
+\end{frame}
+\begin{frame}{Nếu như bạn có một ngày rảnh dỗi!!}
+
+Giả sử vào một ngày đẹp trời bạn có thời gian rảnh ngồi tung đồng xu và ghi lại số lượng các mặt ngửa liên tiếp nhau lớn nhất. 
+\begin{itemize}
+\item Nếu số đó là 3 bạn đã dành không nhiều thời gian cho việc tung đồng xu này
+\item Nếu số đó là 10 bạn đã dành tương đối nhiều thời gian cho việc tung đồng xu
+
+\end{itemize}
+\end{frame}
+\begin{frame}{Nếu như bạn có một ngày rảnh dỗi!!}
+\begin{itemize}
+
+\item Giả sử bạn là một người rất may mắn sau 11 lần tung bạn đạt được 10 mặt ngửa sau đó bạn dừng lại ngay\\
+=> Tôi sẽ có một dự doán rất tệ về số lượng thời gian bạn đã bỏ ra
+\item Cải tiến:
+\begin{itemize}
+\item Tung 10 đồng xu và ghi lại 10 kết quả lớn nhất với mỗi đồng
+\item Tính trung bình của 10 kết quả thu được
+\end{itemize}
+\end{itemize}
+\end{frame}
+\begin{frame}{Ý tưởng thuật toán HyperLoglog}
+\begin{itemize}
+\item Hàm băm H được sử dụng: với mỗi giá trị x trong datastream ta luôn chỉ băm được ra một giá trị. Vì vậy nếu ta dùng một mảng lưu trữ để đánh dấu xem gía trị băm nào đã được băm tới rồi băm hết mutilset ta hoàn toàn có thể biết được số lượng phần tử khác nhau trong multilset. => vấn đề: ta không thể sử dụng nhiều bộ nhớ như vậy
+\item Sử dụng bài toán "rảnh dỗi": Ta sẽ lấy p bit đầu của giá trị băm làm index từ đố ta đã gián tiếp mô tả  $2^p$ đồng xu ta cần một mảng M để lưu lại giá lớn nhất các số 0 liên tiếp (mặt ngửa) tính từ giá trị đầu tiên(với điều kiện hàm tạo ra dãy bit một cách tương đối độc lập(giả ngẫu nhiên)) 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Mô tả}
+\begin{figure}[H]
+\includegraphics[scale=0.3]{HLL.png}
+
+\end{figure}
+
 \end{frame}
 \begin{frame}
 \begin{figure}[H]
@@ -187,13 +219,7 @@ Thuật toán sẽ đếm số lượng số 0 ở đâù của giá trị băm 
 \end{figure}
 \end{frame}
 
-\begin{frame}{Giải thích chi tiết}
-\begin{enumerate}
-\item Initialization of registers
-\item Small range corrections
-\item Large range corrections.
-\end{enumerate}
-\end{frame}
+
 \section{Các cải tiến cho HyperLogLog }
 \begin{frame}{Các cải tiến cho HyperLogLog}
 
@@ -209,7 +235,7 @@ Thuật toán sẽ đếm số lượng số 0 ở đâù của giá trị băm 
 \item[•] Sử dụng 64 bits yêu cầu bộ nhớ $6.2^p$
 \begin{itemize}
 \item không cần quan tâm xung đột hàm băm \\
-(lực lượng tập $2^64 \approx 1.8\cdot 10^{19}$ )
+(lực lượng tập $2^{64} \approx 1.8\cdot 10^{19}$ )
 \item Large range correction là không cần thiết 
 \end{itemize}
 \end{itemize}
@@ -437,7 +463,9 @@ Philippe Flajolet, Èric Fusy, Olivier Gandouet and Frédéric Meunier
     \ei
 \end{frame}
 
-
+\begin{frame}
+\includegraphics[scale=0.6]{thanks.jpg}
+\end{frame}
 
 
 \end{document}
