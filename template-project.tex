@@ -11,6 +11,7 @@
 % Ký tự tiếng Việt
 \usepackage[utf8]{vietnam}
 \usepackage[utf8]{inputenc}
+\usepackage{alltt}
 % Công thức toán
 \usepackage{amsmath,amsthm,amssymb,epsfig}
 % Chèn ảnh
@@ -23,24 +24,6 @@
 
 % Insert code
 \usepackage{listings}
-\lstset{language=C++,
-   %keywords={break,case,catch,continue,else,elseif,end,for,function,
-   %   global,if,otherwise,persistent,return,switch,try,while},
-   basicstyle=\ttfamily,
-   keywordstyle=\color{blue},
-   commentstyle=\color{red},
-   stringstyle=\color{dkgreen},
-   frame=lrtb,
-   %frame=5 pt,
-   numbers=left,
-   numberstyle=\tiny\color{gray},
-   stepnumber=1,
-   numbersep=10pt,
-   backgroundcolor=\color{white},
-   tabsize=4,
-   showspaces=false,
-   showstringspaces=false}
-% Tô mầu cho bảng
 \usepackage{colortbl}
 
 
@@ -54,11 +37,7 @@
 \definecolor{Do}{rgb}{1,0.25,0}
 \definecolor{Vang}{rgb}{1,1,0}
 \definecolor{Datroi}{rgb}{0,0,1}
-% Vẽ hình
-\usepackage{tikz}
-\usetikzlibrary{arrows,shapes}
-% Vẽ mạch điện
-\usepackage[siunitx,european resistors]{circuitikz}
+
 
 % multirow
 \usepackage{multirow}
@@ -109,14 +88,6 @@
 %\usemintedstyle{monokai}
 %\newminted{cpp}{fontsize=\footnotesize}
 
-% Graph styles
-\tikzstyle{vertex}=[circle,fill=black!50,minimum size=15pt,inner sep=0pt, font=\small]
-\tikzstyle{selected vertex} = [vertex, fill=red!24]
-\tikzstyle{edge} = [draw,thick,-]
-\tikzstyle{dedge} = [draw,thick,->]
-\tikzstyle{weight} = [font=\scriptsize,pos=0.5]
-\tikzstyle{selected edge} = [draw,line width=2pt,-,red!50]
-\tikzstyle{ignored edge} = [draw,line width=5pt,-,black!20]
 
 %gets rid of bottom navigation bars
 \setbeamertemplate{footline}[frame number]{}
@@ -169,37 +140,28 @@ Các yêu cầu :
 \end{itemize}
 
 \end{frame}
-\begin{frame}{Ý tưởng thuật toán HyperLogLog}
-\subsection{Ý tưởng thuật toán HyperLogLog}
-\end{frame}
-\begin{frame}{Nếu như bạn có một ngày rảnh dỗi!!}
-
-Giả sử vào một ngày đẹp trời bạn có thời gian rảnh ngồi tung đồng xu và ghi lại số lượng các mặt ngửa liên tiếp nhau lớn nhất. 
+\begin{frame}
+\color{hilight} Bài toán: 
 \begin{itemize}
-\item Nếu số đó là 3 bạn đã dành không nhiều thời gian cho việc tung đồng xu này
-\item Nếu số đó là 10 bạn đã dành tương đối nhiều thời gian cho việc tung đồng xu
-
+\item Input: Dãy S
+\item Output: Ước lượng số phần tử khác nhau của S
 \end{itemize}
 \end{frame}
-\begin{frame}{Nếu như bạn có một ngày rảnh dỗi!!}
+\subsection{Thuật toán HyperLogLog}
+\begin{frame}{Thuật toán HyperLogLog}
 \begin{itemize}
+\item Hàm băm h : D -> $\{0,1\}^{32}$ 
+\item Ta băm lần lượt từng phần tử trong S $$\forall x \in S,  h_x = h(x)  $$, ta được tập HX
+Dựa vào p bit đầu của giá trị băm $p \in [4..16] $ ta sẽ chia HX thành m dãy con $HX_i$ bằng cách dựa vào p bit đầu của giá trị băm($m=2^p$) 
 
-\item Giả sử bạn là một người rất may mắn sau 11 lần tung bạn đạt được 10 mặt ngửa sau đó bạn dừng lại ngay\\
-=> Tôi sẽ có một dự doán rất tệ về số lượng thời gian bạn đã bỏ ra
-\item Cải tiến:
-\begin{itemize}
-\item Tung 10 đồng xu và ghi lại 10 kết quả lớn nhất với mỗi đồng
-\item Tính trung bình của 10 kết quả thu được
-\end{itemize}
+Với mỗi $HX_i$ số lượng số 0 liên tiếp đầu tiên lớn nhất trong các giá trị băm cộng một ( không tính p bit đã đã dùng để tách dãy ) sẽ được lưu vào mảng M, $ M[i] $ tương ứng với $HX_i$
+$$ M[i]=max_{x \in HX} \varrho(x)  $$ với $\varrho $ số lượng số 0 liên tiếp đầu tiên lớn nhất trong các giá trị băm cộng một.
 \end{itemize}
 \end{frame}
-\begin{frame}{Ý tưởng thuật toán HyperLoglog}
-\begin{itemize}
-\item Hàm băm H được sử dụng: với mỗi giá trị x trong datastream ta luôn chỉ băm được ra một giá trị. Vì vậy nếu ta dùng một mảng lưu trữ để đánh dấu xem gía trị băm nào đã được băm tới rồi băm hết mutilset ta hoàn toàn có thể biết được số lượng phần tử khác nhau trong multilset. => vấn đề: ta không thể sử dụng nhiều bộ nhớ như vậy
-\item Sử dụng bài toán "rảnh dỗi": Ta sẽ lấy p bit đầu của giá trị băm làm index từ đố ta đã gián tiếp mô tả  $2^p$ đồng xu ta cần một mảng M để lưu lại giá lớn nhất các số 0 liên tiếp (mặt ngửa) tính từ giá trị đầu tiên(với điều kiện hàm tạo ra dãy bit một cách tương đối độc lập(giả ngẫu nhiên)) 
-\end{itemize}
+\begin{frame}
+Số lượng phần tử khác nhau trong đầu vào dãy S sẽ được ước lượng bằng công thức:
+$$ E:= \alpha_m .m^2.(\sum_{j=1}^m 2^{-M[j]} )^{-1}$$ với $$ \alpha_m :=(m \displaystyle \int_0^\infty  (log_2 (\dfrac{2+u}{1+u})^m du)^{-1} ) $$
 \end{frame}
-
 \begin{frame}{Mô tả}
 \begin{figure}[H]
 \includegraphics[scale=0.3]{HLL.png}
@@ -209,13 +171,13 @@ Giả sử vào một ngày đẹp trời bạn có thời gian rảnh ngồi tu
 \end{frame}
 \begin{frame}
 \begin{figure}[H]
-\includegraphics[scale=0.6]{HLL1.png}
+\includegraphics[scale=0.8]{HLL1.png}
 
 \end{figure}
 \end{frame}
 \begin{frame}
 \begin{figure}[H]
-\includegraphics[scale=0.3]{HLL2.png}
+\includegraphics[scale=0.4]{HLL2.png}
 \end{figure}
 \end{frame}
 
@@ -243,49 +205,53 @@ Giả sử vào một ngày đẹp trời bạn có thời gian rảnh ngồi tu
 
 
 \begin{frame}{Ước lượng cho tập lực lượng nhỏ(Estimating Small Cardinalities)}
-\subsection{Estimating Small Cardinalities}
+\subsection{Ước lượng cho tập lực lượng nhỏ}
 \begin{itemize}
-\item[•] Ước lượng $HLL_{ORIG}$ gặp lỗi lớn đối với tập có lực lượng nhỏ
+\item[•] Với tập lực lượng nhỏ $HLL_{ORIG}$ cho kết quả tệ
 \begin{itemize}
-\item[•] Nếu n = 0 thuật toán luôn trả về 0.7m 
+\item[•] Nếu n = 0,1,2 thuật toán luôn trả về $\approx 0.7m$ 
 \end{itemize}
 \item[•] Để đạt được ước lượng tốt cho tập lực lượng nhỏ
 \begin{itemize}
-\item $HLL_{ORIG}$ sử dụng LINEARCOUNTING nếu $E < \frac{5}{2}m$ ngược lại dùng ước lượng thô. 
+\item $HLL_{ORIG}$ sử dụng LINEARCOUNTING khi $E < \frac{5}{2}m$
 \end{itemize}
-\item[•] Các lỗi của ước lượng thô là vì độ lệch
+\end{itemize}
+{\color{hilight} Nhận xét:} Kết quả không chính xác là do "độ lệch"\\
+{\color{hilight} Giải pháp:}
 \begin{itemize}
-\item Chúng ta có thể hiệu chỉnh độ lệch
-\item Chúng ta hi vọng sẽ đạt được ước lượng tốt nhất đối với tập lực lượng nhỏ trong thực tế.
+\item Hiệu chỉnh độ lệch
 \end{itemize}
-\end{itemize}
+ $ \gg $ Hi vọng sẽ đạt được ước lượng tốt hơn nếu độ lệch được hiệu chỉnh đúng
+
+
 \end{frame}
-\begin{frame}{Cài đặt thực nghiệm}
+\begin{frame}{Các thử nghiệm}
 \bi
-\item Chay thuật toán $HLL_{64BIT}$ không sử dụng LINEARCOUNTING và đo ước lượng cho 1 khoảng với các lực lượng khác nhau.
+\item Chay thuật toán $HLL_{64BIT}$ không sử dụng LINEARCOUNTING và đo ước lượng cho 1 khoảng với các lực lượng khác nhau
 \bi
-\item Ước lượng với $p = 14$ trên tập 5000 tập dữ liệu tạo ngẫu nhiên cho mỗi lực lượng.
+\item Ước lượng với $p = 14$ trên tập 5000 tập dữ liệu tạo ngẫu nhiên cho mỗi lực lượng
 \item Sử dụng cùng 1 hàm băm 64 bit cho tất cả thực nghiệm.
-\item Kiểm tra với nhiều hàm băm khác nhau (MD5, SHA256,MURMUR3).
+\item Kiểm tra với nhiều hàm băm khác nhau (MD5, SHA256,MURMUR3)
 \ei
-\item Tuy nhiện chưa tìm dấu hiệu để hàm băm này thực hiện tốt hơn các hàm băm khác.
+
 \ei
+{\color{hilight} Kết quả thử nghiệm:}  Chưa tìm dấu hiệu để hàm băm này thực hiện tốt hơn các hàm băm khác
 \end{frame}
 \begin{frame}{Hiệu chỉnh độ lệch theo kinh nghiệm}
-Để xác định đô lệch, chúng ta tính trung vị các ước lượng thô cho mỗi lực lượng trừ nó.
+
 \begin{figure}[h]
-\includegraphics[scale=0.45]{img1.png}
+\includegraphics[scale=0.5]{img1.png}
 \caption{Trung bình độ lêch thô của thuật toán $HLL_{64BIT}$}
 \end{figure}
-Nếu  $n > 5m$ điều chỉnh không còn đáng kể.
+{\color{hilight} Nhận xét:}  $n > 5m$ hiệu chỉnh gần như là không  cần thiết
 \end{frame}
 
 \begin{frame}{Hiệu chỉnh độ lêch theo kinh nghiệm}
-Chúng ta có thể tính toán các quan sát độ lệch và sử dụng nó để hiệu chỉnh ước lượng thô \\ 
+Chúng ta có thể tính toán các quan sát độ lệch và sử dụng nó để hiệu chỉnh ước lượng \\ 
 
 Để làm trong thực tế:
 \bi
-\item Chọn 200 lực lượng bằng nội suy điểm
+\item Chọn 200 tập lực lượng khác nhau bởi các điểm nội suy
 \item Ghi lại trung bình ước lượng thô và độ lệch(sai số).
 \item Dùng k-nearest neighbor nội suy để lấy độ lệch cho một cái ước lược thô.(k = 6).
 \ei
@@ -298,7 +264,7 @@ Chúng ta có thể tính toán các quan sát độ lệch và sử dụng nó 
 \ei
 \end{itemize}
 \begin{figure}[h]
-\includegraphics[scale=0.45]{img2.png}
+\includegraphics[scale=0.5]{img2.png}
 \caption{Trung bình error của 3 thuật toán}
 \end{figure}
 \end{frame}
@@ -307,25 +273,26 @@ Sử dụng bias-corrected trộn với LINEARCOUNTING có ưu điểm hơn so v
 \begin{itemize}
 \item Lỗi cho 1 khoảng quan trọng của các lực lượng nhỏ hơn lỗi của $HLL_{64BIT}$
 \item Kết quả của thuật toán không có độ lệch đáng kể.
-\item Một lỗi nhỏ trong ngưỡng có kết quả nhỏ hơn về tính chính xác của kết quả thuật toán. 
+
 \end{itemize} 
 \end{frame}
-\subsection{Sparse Representation}
-\begin{frame}{Sparse Representation}
+\subsection{Biểu diễn thưa ( Sparse Representation )}
+\begin{frame}{Biểu diễn thưa}
 \bi
-\item $Hll_NoBias $ yêu cầu bộ nhớ là 6m bit với bất kì n  \\
+\item $Hll_{NoBias} $ yêu cầu bộ nhớ là 6m bit với bất kì n  \\
 \item Trong trường hợp $n\ll m $ ta nhận thấy việc sử dụng bộ nhớ này hoàn toàn không hiệu quả \\
--> Vì vậy trong trường hợp này ta  phải sử dụng biểu diễn thưa(Sparse Representation) trong khi lưu cắp $(idx,\varrho(w)) $ \\
+$ \gg$ Vì vậy trong trường hợp này ta nên sử dụng biểu diễn thưa ( Sparse Representation ), lưu các cặp $(idx,\varrho(w)) $ thành một danh sách thay vì sử dụng cả một mảng M như trước để tiết kiệm bộ nhớ\\
+\item Chuyển giá trị cặp $(idx,\varrho(w)) $ thành một số nguyên bằng các biểu điễn thành một dãy bit trong đó idx là những bit cao và $\varrho(w) $ được lưu ở nhưng bit thấp\\
 \ei
 \end{frame}
-\begin{frame}{Sparse Representation}
+\begin{frame}{}
 \bi
-\item Chúng ta sẽ convert $(idx,\varrho(w)) $ ra một số nguyên bằng các biểu điễn thành một dãy bit trong đó idx là những bit cao và $\varrho(w) $ được lưu ở nhưng bit thấp. \\
-\item Ta sẽ có một danh sách các $(idx,\varrho(w)) $ :
-Để tăng tốc độ ta sử dụng một tập tạm thời tập này sẽ trộn với danh sách ở một thời điểm nào đó(vd : 25 $\%$ của danh sách) .\\
-\item Một phần tử mới khi đưa vào  tập tạm thời nếu có phần tử cùng idx mà có giá trị lớn hơn nó trong tập rồi nó sẽ không được thêm vào .\\
-Vì các tập đã được sắp xếp theo idx nên khi trộn set với list ta chỉ cần lướt một lần.
+
+\item Để tăng tốc độ ta sử dụng một tập tạm thời tập này sẽ trộn với danh sách ở một thời điểm nào đó(vd : 25 $\%$ của danh sách) \\
+
+
 \ei
+{\color{hilight} Nhận xét:} Vì các tập đã được sắp xếp theo idx nên khi trộn tập với danh sách ta chỉ cần duyệt một lần
 \end{frame}
 \begin{frame}{Lợi ích }
 \begin{itemize}
@@ -333,63 +300,74 @@ Vì các tập đã được sắp xếp theo idx nên khi trộn set với list
 \item Tăng một chút thời gian chạy với việc sử dụng tập tạm thời
 \end{itemize}
 \end{frame}
-\begin{frame}{Higher Precision for the Sparse Representa-
-tion} 
+\begin{frame}{Tăng p với biểu diễn thưa} 
 \bi
 \item Trong biểu diễn thưa ta có thể chon p' >p (Precision) nó giúp ta tăng độ  độ chính xác của thuật toán lên.\\
 
-\item Điều gì xảy ra nếu khi tăng độ chính xác làm không gian lưu trữ vượt quá lên ngưỡng 6m bit.\\
-\item Ta có thể một biểu diễn thưa với p' -> biểu điễn p bới thuật toán sau:
+\item Điều gì xảy ra nếu khi tăng p làm không gian lưu trữ vượt quá lên ngưỡng 6m bit.\\
+\item Ta có thể chuyển một biểu diễn thưa với p' -> biểu điễn p bới thuật toán sau đây
 \ei 
 \end{frame}
 \begin{frame}{Thuật toán chuyển độ chính xác}
 Xét một cặp $(idx',\varrho(w)') $ với p' ta cần chuyển về $(idx,\varrho(w)) $ với p : 
 \begin{figure}[H]
-\includegraphics[scale=0.2]{HSR.png}
+\includegraphics[scale=0.25]{HSR.png}
 \caption {Thuật toán chuyển Precision}
 \end{figure}
 
 \end{frame}
 \begin{frame}
 \begin{figure}
-\includegraphics[scale=0.5]{img4.png}
+\includegraphics[scale=0.6]{img4.png}
 \caption{So sánh Hll NoBias và  Hll++}
 \end{figure}
 \end{frame}
 \begin{frame}{Giảm không gian nhớ với nén thưa }
 \bi
 \item Sử dụng biểu diễn nguyên cho $(idx,\varrho(w)) $ hoạt đông tốt nhưng một phần bit của bộ nhớ vẫn bị bỏ lãng phí.
-\item Tuy nhiên ta có thể lưu ý 2 điều sau để dữ liệu lưu được đặc khít hơn :
+\item Tuy nhiên ta có thể lưu ý 2 điều sau để dữ liệu lưu được đặc khít hơn:
 \begin{itemize}
-\item Sử dụng số nguyên với độ rộng cứng có thể gây lãng phí.
-\item Danh sách được sắp xếp ta có thể lợi dụng điều này.
+\item Sử dụng số nguyên với độ rộng cứng sẽ gây lãng phí
+\item Danh sách cần được sắp xếp
 \end{itemize}
 \ei 
 \end{frame}
 \begin{frame}{Thực hiện}
 \begin{itemize}
-\item Chúng ta sẽ encode the độ dài của biến
-\item Ngoài ra chúng ta không lưu $a_1,a_2,a_3,...$ mà lưu $ a_1,a_2-a_1,a_3-a_2,...$
+\item Chúng ta sẽ encode theo độ dài của biến
+\item Ngoài ra chúng ta không lưu $a_1,a_2,a_3,...$ mà lưu $ a_1,a_2-a_1,a_3-a_2,...$\\
+
 \end{itemize}
+
+{\color{hilight} Nhận xét:} Khi nhìn vào việc thêm một phần tử vào danh sách nén ta sẽ thấy việc này khá là khó khăn nhưng xét trong một tiến trình trộn giữa tập tạm thời và danh sách nén thì việc này vẫn được thực hiện một cánh tuần tự.
 \end{frame}
-\begin{frame}{Nhược điểm }
-Khi nhìn vào việc thêm một phần tử vào danh sách nén ta sẽ thấy việc này khá là khó khăn nhưng xét trong một tiến trình trộn giữa tập tạm thời và danh sách nén thì việc này vẫn được thực hiện một cánh tuần tự.
-\end{frame}
-\begin{frame}{Encoding Hash Values}
+
+\begin{frame}{Nhận xét}
 \bi 
-\item Nhận thấy số lượng biến băm có thể lưu bằng biểu diễn thưa là nhỏ khi so ngưỡng chuyển từ Linear couting to bias-corrected raw
-estimate . \\
-\item Linear couting  chỉ yêu cầu m và số lượng các idex tai đấy có giá trị nhớ bằng 0.\\
-\item Với các giá trị chuyển từ biểu diễn thưa lên biểu diễn thường $\varrho(w)$ chỉ cần lưu lại khi các bit $<x_{63-p} ,...,x_{64-p}>$ tất cả là 0. Một hàm băm tốt thì xác suất lưu lại  $\varrho(w)$ $ 2^{p-p'}$
-\\Thực hiện : sử dụng 1 bit đẻ cho biết ta có lưu lại $\varrho(w)$ không:\\
- 
-if $<x_{63-p} ,...,x_{64-p}>$ tất cả là 0 encode :  $$<x_{63-p} ,...,x_{64-p}> || <\varrho(w)>||<1>$$
-else $$<x_{63-p} ,...,x_{64-p}> ||<0>$$ 
+\item Biểu diễn thưa thực chất chỉ đóng vai trò trong việc chuyển pha
+\bi
+\item Nhận thấy số lượng biến băm có thể lưu bằng biểu diễn thưa là nhỏ khi so ngưỡng chuyển từ Linear couting sang bias-corrected raw estimate  \\
+\item Linear couting  chỉ yêu cầu m và số lượng các index tai đấy có giá trị nhớ bằng 0.\\
 \ei
+\ei
+\end{frame}
+\begin{frame}{Giảm không gian bộ nhớ cần lưu khi chuyển pha} 
+Với các giá trị chuyển từ biểu diễn thưa lên biểu diễn thường:\\
+{\color{hilight} Nhận xét:}\\
+\bi
+ \item $\varrho(w)$ chỉ cần lưu lại khi các bit $<x_{63-p} ,...,x_{64-p}>$ tất cả là 0
+\item  Một hàm băm tốt thì xác suất lưu lại  $\varrho(w)$ $ 2^{p-p'}$
+\ei 
+{\color{hilight} Giải pháp:}
+\\Thực hiện : sử dụng 1 bit đẻ cho biết ta có lưu lại $\varrho(w)$ không:
+\begin{alltt}
+ if $<x_{63-p} ,...,x_{64-p}>$ :tất cả là 0  $$<x_{63-p} ,...,x_{64-p}> || <\varrho(w)>||<1>$$
+else $$<x_{63-p} ,...,x_{64-p}> ||<0>$$ 
+\end{alltt}
 \end{frame}
 \begin{frame}{Hiệu quả không gian}
 \begin{figure}[H]
-\includegraphics[scale=0.5]{img3.png}
+\includegraphics[scale=0.6]{img3.png}
 \end{figure}
 \begin{itemize}
 \item $p = 14$ lưu mỗi phần tử trong biểu diễn thưa như 1 số nguyên sẽ cần 32 bit
@@ -399,52 +377,20 @@ else $$<x_{63-p} ,...,x_{64-p}> ||<0>$$
 \end{itemize}
 \end{itemize}
 \end{frame}
+\section{Kết luận}
 
-\begin{frame}{Mã giả kết hợp các cải tiến}
-\begin{figure}[h]
-\includegraphics[scale=0.6]{img5.png}
-\caption{Phase 0}
-\end{figure}
-\end{frame}
-\begin{frame}{}
-\begin{figure}[h]
-\includegraphics[scale=0.6]{img6.png}
-\caption{Phase 1}
-\end{figure}
-\end{frame}
-\begin{frame}
-\begin{figure}[h]
-\includegraphics[scale=0.6]{img7.png}
-\caption{Phase 2}
-\end{figure}
-\end{frame}
-\begin{frame}
-\begin{figure}[h]
-\includegraphics[scale=0.7]{img8.png}
-\end{figure}
-\end{frame}
-\begin{frame}
-\begin{figure}[h]
-\includegraphics[scale=0.7]{img9.png}
-\end{figure}
-\end{frame}
-\begin{frame}
-\begin{figure}[h]
-\includegraphics[scale=0.7]{img10.png}
-\end{figure}
-\end{frame}
 \begin{frame}{Kết luận}
 \begin{itemize}
-\item $<12000$ biểu diễn thưa làm giảm lỗi
-\item $12000->61000$ the bias correction làm giảm lỗi
+\item $<12000$ sử dụng biểu diễn thưa đã làm giảm lỗi đáng kể
+\item $12000\rightarrow61000$ sử dụng bias corection đã làm kết quả tốt hơn hẳn so với $HLL_{org}$
 \item HLL++ tốn ít bộ nhớ hơn
-\item sử dụng hàm băm 64 bit cho phép ước lượng lên khoảng 1 tỉ
+\item Sử dụng hàm băm 64 bit cho phép ước lượng lên khoảng 1 tỉ
 \end{itemize}
 
 \end{frame}
-\begin{frame}{Kết luận }
+\begin{frame}{Kết quả }
 \begin{figure}[H]
-\includegraphics[scale=0.2]{KL.png}
+\includegraphics[scale=0.3]{KL.png}
 \caption{ So sánh HLL và HLL++}
 \end{figure}
 \end{frame}
